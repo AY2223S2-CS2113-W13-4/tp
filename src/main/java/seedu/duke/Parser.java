@@ -14,8 +14,8 @@ public class Parser {
         } else if (userCmd.startsWith("edit expense")) {
             System.out.println(userCmd.substring(userCmd.indexOf("id/") + 3, userCmd.indexOf("in/") - 1));
             executeEditExpense(expenseManager, userCmd);
-        } else if(userCmd.startsWith("delete expense")) {
-            //System.out.println(userCmd.substring(userCmd.indexOf("id/") + 3));
+        } else if (userCmd.startsWith("delete expense")) {
+            // System.out.println(userCmd.substring(userCmd.indexOf("id/") + 3));
             executeDeleteExpense(expenseManager, userCmd);
         } else if (userCmd.startsWith("set balance")) {
             executeSetBudget(expenseManager, userCmd);
@@ -33,34 +33,40 @@ public class Parser {
     private static void executeAddExpense(String userCmd, ExpenseManager expenseManager, int choice) {
         double amount = extractAmount(userCmd);
         LocalDate date = extractDate(userCmd);
+        String name = extractName(userCmd);
         String category = getCategory(choice);
         if (category.equals("wrong input")) {
             Ui.printfalseInput();
         } else {
-            expenseManager.addExpense(amount, date, category);
+            expenseManager.addExpense(name, amount, date, category);
         }
     }
 
     private static String getCategory(int choice) {
         switch (choice) {
-            case 1:
-                return "Food & Drinks";
-            case 2:
-                return "Shopping";
-            case 3:
-                return "Transportation";
-            case 4:
-                return "Life & Entertainment";
-            case 5:
-                return "Investments";
-            case 6:
-                return "Communication & Technology";
-            case 7:
-                return "Others";
-            default:
-                Ui.printfalseInput();
-                return "wrong input";
+        case 1:
+            return "Food & Drinks";
+        case 2:
+            return "Shopping";
+        case 3:
+            return "Transportation";
+        case 4:
+            return "Life & Entertainment";
+        case 5:
+            return "Investments";
+        case 6:
+            return "Communication & Technology";
+        case 7:
+            return "Others";
+        default:
+            Ui.printfalseInput();
+            return "wrong input";
         }
+    }
+
+    private static String extractName(String userCmd) {
+        int endIndex = userCmd.indexOf("$/");
+        return userCmd.substring(0, endIndex);
     }
 
     private static double extractAmount(String userCmd) {
@@ -92,39 +98,40 @@ public class Parser {
         int id = Integer.parseInt(userCmd.substring(userCmd.indexOf("id/") + 3, userCmd.indexOf("in/") - 1));
         Scanner in = new Scanner(System.in);
         switch (userCmd.substring(userCmd.indexOf("in/") + 3)) {
-            case "amount":
-                System.out.println("Enter a new amount spent! Just enter a number!");
-                Double newAmount = Double.parseDouble(in.nextLine());
-                Double newBalance = expenseManager.getTotalBalance() + expenseManager.get(id - 1).getAmount() - newAmount;
-                expenseManager.get(id - 1).setAmount(newAmount);
-                expenseManager.setTotalBalance(newBalance);
-                System.out.println("Change in amount successful ! Balance has also been recalculated");
-                break;
-            case "date":
-                System.out.println("Enter a new date in the form of YYYYMMDD!");
-                String newDate = in.nextLine();
-                int year = Integer.parseInt(newDate.substring(0, 4));
-                int month = Integer.parseInt(newDate.substring(4, 6));
-                int day = Integer.parseInt(newDate.substring(6));
-                expenseManager.get(id - 1).setDate(LocalDate.of(year, month, day));
-                System.out.println("Change in date successful !");
-                break;
-            case "category":
-                Ui.printChoice();
-                int choice = Integer.parseInt(in.nextLine());
-                String newCategory = getCategory(choice);
-                expenseManager.get(id - 1).setCategory(newCategory);
-                System.out.println("Change in category successful !");
-                break;
-            default:
-                Ui.printfalseInput();
+        case "amount":
+            System.out.println("Enter a new amount spent! Just enter a number!");
+            Double newAmount = Double.parseDouble(in.nextLine());
+            Double newBalance = expenseManager.getTotalBalance() + expenseManager.get(id - 1).getAmount() - newAmount;
+            expenseManager.get(id - 1).setAmount(newAmount);
+            expenseManager.setTotalBalance(newBalance);
+            System.out.println("Change in amount successful ! Balance has also been recalculated");
+            break;
+        case "date":
+            System.out.println("Enter a new date in the form of YYYYMMDD!");
+            String newDate = in.nextLine();
+            int year = Integer.parseInt(newDate.substring(0, 4));
+            int month = Integer.parseInt(newDate.substring(4, 6));
+            int day = Integer.parseInt(newDate.substring(6));
+            expenseManager.get(id - 1).setDate(LocalDate.of(year, month, day));
+            System.out.println("Change in date successful !");
+            break;
+        case "category":
+            Ui.printChoice();
+            int choice = Integer.parseInt(in.nextLine());
+            String newCategory = getCategory(choice);
+            expenseManager.get(id - 1).setCategory(newCategory);
+            System.out.println("Change in category successful !");
+            break;
+        default:
+            Ui.printfalseInput();
         }
     }
+
     private static void executeDeleteExpense(ExpenseManager expenseManager, String userCmd) {
         int id = Integer.parseInt(userCmd.substring(userCmd.indexOf("id/") + 3));
         Ui.printHorizontalLine();
-        Expense deletedExpense = expenseManager.get(id-1);
-        expenseManager.remove(id-1);
+        Expense deletedExpense = expenseManager.get(id - 1);
+        expenseManager.remove(id - 1);
         System.out.println("Noted. I've removed this expense:");
         System.out.println(deletedExpense);
         Ui.printHorizontalLine();

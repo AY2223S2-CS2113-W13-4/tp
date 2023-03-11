@@ -1,1 +1,13 @@
-James Gosling
+add expense laksa $/10.00 d/20230220
+
+1
+add expense earbuds $/5.00 d/20230504
+2
+add expense school fees $/200.00 d/20230530
+3
+list expenses
+1
+list expenses
+2
+list expenses
+3
